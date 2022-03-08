@@ -1,4 +1,4 @@
-class UserSerializer
+class DirectorySerializer
   include FastJsonapi::ObjectSerializer
   attributes :id, :email, :username, :created_at
 
