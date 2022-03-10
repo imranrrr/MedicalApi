@@ -73,9 +73,20 @@ class Api::V1::DirectoriesController < ApplicationController
     end
   end
 
-  def user_list 
-  	@users = User.all
-    render json: @users
+  def user_list
+  	if params[:search]
+  		@users = User.where("email ILIKE ?", "%#{params[:search]}%")
+		render json: {
+	        status: true,
+	        data: {users: UserSerializer.new(@users).serializable_hash[:data]}
+	    }
+  	else
+	  	@users = User.all
+	    render json: {
+	        status: true,
+	        data: {users: UserSerializer.new(@users).serializable_hash[:data]}
+	    }
+	end
   end
 
   def shared_directory
@@ -84,10 +95,6 @@ class Api::V1::DirectoriesController < ApplicationController
   	 	user_directory_connections = UserDirectoryConnection.new(user_id: user['id'], directory_id: @directory.id)
   	 	user_directory_connections.save!
   	 end
-  end
-
-  def upload_file
-  	@directory
   end
 
 

@@ -9,5 +9,6 @@ class User < ApplicationRecord
 
     has_many :user_directory_connections
     has_many :directories, through: :user_directory_connections
-    has_one_attached :file
+    has_many_attached :files
+    has_one :subscription
 end

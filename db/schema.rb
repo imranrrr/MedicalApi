@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_08_134743) do
+ActiveRecord::Schema.define(version: 2022_03_10_192957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -52,6 +52,22 @@ ActiveRecord::Schema.define(version: 2022_03_08_134743) do
     t.boolean "delete_temporary", default: false
   end
 
+  create_table "packages", force: :cascade do |t|
+    t.string "name"
+    t.integer "price"
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer "status"
+    t.bigint "user_id"
+    t.bigint "package_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["package_id"], name: "index_subscriptions_on_package_id"
+    t.index ["status"], name: "index_subscriptions_on_status"
+    t.index ["user_id"], name: "index_subscriptions_on_user_id"
+  end
+
   create_table "user_directory_connections", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "directory_id"
@@ -71,6 +87,8 @@ ActiveRecord::Schema.define(version: 2022_03_08_134743) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "jti", null: false
     t.string "username"
+    t.boolean "paid", default: false
+    t.string "stripe_account_intent"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
